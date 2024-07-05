@@ -1,0 +1,26 @@
+/* .post{
+    border: 1px solid #000000;
+    padding: 10px;
+    margin: 10px;
+    color: rgb(1, 1, 1);
+
+} */
+
+.custom-btn{
+    margin: 5px;
+    padding: auto;
+}
+.date{
+    font-size: 12px;
+}
+/* .centerstage{
+    border: 1px solid #000000;
+    border-radius: 2%;
+} */
+body, html{
+    height: 100%;
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: rgb(35, 36, 38);
+    color: white;
+}

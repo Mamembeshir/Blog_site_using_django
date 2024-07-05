@@ -1,0 +1,64 @@
+{% extends 'blogs/base.html' %}
+{% block content %}
+    <div class="container mt-5">
+        <!-- Post Card -->
+        <div class="card mb-4">
+            {% if post.image %}
+                <img class="card-img-top" src="{{ post.image.url }}" alt="{{ post.title }}">
+            {% endif %}
+            <div class="card-body">
+                <h1 class="card-title">{{ post.title }}</h1>
+                <p class="card-text text-truncate">{{ post.text }}</p>
+                {% if post.published_at %}
+                    <div class="date mb-3">
+                        Published at: <time datetime="{{ post.published_at }}">{{ post.published_at|date:"D M Y" }}</time>
+                        <span class="ms-2">
+                            <i class="bi bi-calendar"></i>
+                        </span>
+                    </div>
+                {% else %}
+                    <a class="btn btn-primary mb-3" href="{% url 'post_publish' pk=post.pk %}">Publish</a>
+                {% endif %}
+
+                <div class="post-content mb-4">{{ post.content|safe|linebreaksbr }}</div>
+
+                {% if user.is_authenticated %}
+                    <div class="mb-4">
+                        <a class="btn btn-primary" href="{% url 'post_edit' pk=post.pk %}">
+                            <i class="bi bi-pencil"></i> Edit
+                        </a>
+                        <a class="btn btn-danger" href="{% url 'post_remove' pk=post.pk %}">
+                            <i class="bi bi-trash"></i> Delete
+                        </a>
+                    </div>
+                {% endif %}
+
+                <a class="btn btn-primary btn-comment mb-4" href="{% url 'add_comment_to_post' pk=post.pk %}">Add Comment</a>
+            </div>
+        </div>
+
+        <!-- Comments Section -->
+        <div class="comments-section">
+            {% for comment in post.comments.all %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ comment.created_at|date:"D M Y" }}</h5>
+                        <p class="card-text">{{ comment.text|safe }}</p>
+                        <p class="card-text"><small class="text-muted">Published by: {{ comment.author }}</small></p>
+                        {% if not comment.approved_comment %}
+                            <a class="btn btn-danger" href="{% url 'comment_remove' pk=comment.pk %}">Remove Comment</a>
+                            <a class="btn btn-primary" href="{% url 'comment_approval' pk=comment.pk %}">Approve Comment</a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% empty %}
+                <p>No comments</p>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+<!-- Add the required Bootstrap Icons CSS -->
+{% block extra_css %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" integrity="sha384-xw60v2e1dhW0cK3G5gjpqfBoMj81WLEHqjH6tzt4G3+PVRO4ZB6O2KjzqR2vPZnT" crossorigin="anonymous">
+{% endblock %}

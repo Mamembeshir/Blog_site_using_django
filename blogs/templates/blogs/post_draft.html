@@ -1,0 +1,11 @@
+{% extends 'blogd/base.html' %}
+{% block content %}
+<h1>drafts</h1>
+{% for post in posts %}
+<div class="post">
+    <p class="post-date">created at: {{post.created_at|date:"D M Y"}}</p>
+    <a href="{% url 'post_detail' pk=post.pk %}">{{post.title}}</a>
+    <p>{{post.text|truncatechars:200}}</p>
+</div>
+{% endfor %}
+{% endblock %}

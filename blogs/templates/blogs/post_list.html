@@ -1,0 +1,27 @@
+{% extends 'blogs/base.html' %}
+{% block content %}
+<h1>Blog posts</h1>
+<div class="container mt-5">
+    <div class="row">
+        {% for post in post_list %}
+        <div class="col-12 mb-4">
+            <div class="card">
+                {% if post.image %}
+                <img class="card-img-top" src="{{ post.image.url }}" alt="{{ post.title }}">
+                {% endif %}
+                <img class="card-img-top" src="" alt="">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a>
+                    </h5>
+                    <p class="card-text">Published at: {{ post.published_at|date:"D M Y" }}</p>
+                    <p class="card-text">
+                        <a href="{% url 'post_detail' pk=post.pk %}">{{ post.approved_comments.count }} comments</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
