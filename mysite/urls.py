@@ -24,7 +24,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include('blogs.urls')),
     path('accounts/login/',views.LoginView.as_view(), name='login'),
-    path('accounts/logout/',views.LogoutView.as_view(),name="logout", kwargs={'next_page':'/'}),
+    path('accounts/logout/',views.LogoutView.as_view(),name="logout", kwargs={'next_page':'post_list'}),
 
 
 ]

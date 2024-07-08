@@ -111,6 +111,10 @@ def signup(request):
         print('hey')
     return render(request, 'registration/signup.html', {'form': form})
 
+@login_required
+def profile(request):
+    return render(request, 'registration/profile.html')
+
 
 
 

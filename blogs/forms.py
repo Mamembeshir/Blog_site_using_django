@@ -20,10 +20,16 @@ class CommentsForm(forms.ModelForm):
             'text':forms.Textarea(attrs={'class':'editable medium-editor-textarea'})
         }
 class UserCreationForm(AuthUserCreationForm):
-    email=forms.EmailField(max_length=254,help_text='Required. Inform a valid email address.')
-    bio=forms.CharField(max_length=500,help_text='Tell us about yourself')
+    email=forms.EmailField(max_length=254)
+    bio=forms.CharField(max_length=500)
     profile_pic=forms.ImageField(required=False)
 
     class Meta:
         model=User
         fields = ('username', 'email', 'password1','password2','bio', 'profile_pic')
+
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name in self.fields:
+            self.fields[field_name].help_text=None
