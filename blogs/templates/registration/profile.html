@@ -3,7 +3,7 @@
     <div class="container mt-5">
         <div class="card mb-4">
             {% if user.userprofile.profile_pic %}
-            <img class="card-img-top" src="{{ user.userprofile.profile_pic }}" alt="{{user.username}}">
+            <img class="card-img-top" src="{{ user.userprofile.profile_pic.url }}" alt="{{user.username}}">
             {% endif %}
 
             <div class="card-body">
