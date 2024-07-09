@@ -46,14 +46,19 @@
                         <p class="card-text">{{ comment.text|safe }}</p>
                         <p class="card-text"><small class="text-muted">Published by: {{ comment.author }}</small></p>
                         {% if not comment.approved_comment %}
-                            <a class="btn btn-danger" href="{% url 'comment_remove' pk=comment.pk %}">Remove Comment</a>
-                            <a class="btn btn-primary" href="{% url 'comment_approval' pk=comment.pk %}">Approve Comment</a>
-                        {% endif %}
-                    </div>
+                        <a class="btn btn-primary" href="{% url 'comment_approval' pk=comment.pk %}">Approve Comment</a>
+                         {% endif %}
+                         <a class="btn btn-danger" href="{% url 'comment_remove' pk=comment.pk %}">Remove Comment</a>
+                         
+                        
+                        
+                          
                 </div>
             {% empty %}
                 <p>No comments</p>
             {% endfor %}
+        </div>
+    </div>
         </div>
     </div>
 {% endblock %}

@@ -1,3 +1,4 @@
+from django.db.models.query import QuerySet
 from django.shortcuts import render,get_object_or_404,redirect
 from django.views.generic import TemplateView,ListView,DetailView,CreateView,UpdateView,DeleteView
 from .models import Post,Comments,UserProfile
@@ -25,6 +26,9 @@ class CreatePostView(LoginRequiredMixin,CreateView):
     redirect_field_name='post_detail'
     form_class=PostForm
     model= Post
+    def form_valid(self, form):
+        form.instance.author=self.request.user
+        return super().form_valid(form)
 
 class PostUpdateView(LoginRequiredMixin,UpdateView):
     login_url='/login/'
@@ -42,7 +46,12 @@ class DraftListView(LoginRequiredMixin,ListView):
 
     def get_queryset(self):
         return Post.objects.filter(published_at__isnull=True).order_by('-created_at')
-    
+class MyPostsView(LoginRequiredMixin,ListView):
+    login_url='/login/'
+    redirect_field_name='post_list'
+    model=Post
+    def get_queryset(self):
+        return Post.objects.filter(author=self.request.user).order_by('-created_at')    
 @login_required
 def post_publish(request, pk):
     post=get_object_or_404(Post,pk=pk)
@@ -77,6 +86,7 @@ def comment_publish(request, pk):
 def comment_appoval(request,pk):
     comment=get_object_or_404(Comments,pk=pk)
     comment.approve()
+    comment.save()
     return redirect('post_detail',pk=comment.post.pk)
 
 
@@ -113,7 +123,9 @@ def signup(request):
 
 @login_required
 def profile(request):
-    return render(request, 'registration/profile.html')
+    user=request.user
+    return render(request, 'registration/profile.html',{"user":user})
+
 
 
 

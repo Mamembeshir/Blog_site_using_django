@@ -22,7 +22,7 @@ TEMPLATE_DIR=os.path.join(BASE_DIR,'blogs/templates/blogs')
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY')
-DEBUG=config('DEBUG', default=False, cast=bool)
+DEBUG=True
 # SECURITY WARNING: don't run with debug turned on in production!
 
 
