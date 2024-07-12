@@ -5,11 +5,11 @@
             {% if user.userprofile.profile_pic %}
             <img class="card-img-top" src="{{ user.userprofile.profile_pic.url }}" alt="{{user.username}}">
             {% endif %}
-
+            
             <div class="card-body">
                 <h1 class="card-title">{{ user.username }}</h1>
                 <p class="card-text">{{ user.email }}</p>
 
                 <p class="card-text"> <a href="{% url 'my_posts' %}">my posts</a></p>
-            
+{% endfor %}
 {% endblock %}

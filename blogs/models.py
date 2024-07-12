@@ -10,6 +10,7 @@ class Post(models.Model):
     created_at=models.DateTimeField(default=timezone.now)
     published_at=models.DateTimeField(blank=True,null=True)
     image=models.ImageField(upload_to='posts/',blank=True,null=True)
+    likes=models.IntegerField()
 
     def publish(self):
         self.published_at=timezone.now()

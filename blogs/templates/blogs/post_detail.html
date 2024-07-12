@@ -9,6 +9,7 @@
             <div class="card-body">
                 <h1 class="card-title">{{ post.title }}</h1>
                 <p class="card-text text-truncate">{{ post.text }}</p>
+            
                 {% if post.published_at %}
                     <div class="date mb-3">
                         Published at: <time datetime="{{ post.published_at }}">{{ post.published_at|date:"D M Y" }}</time>
@@ -22,7 +23,7 @@
 
                 <div class="post-content mb-4">{{ post.content|safe|linebreaksbr }}</div>
 
-                {% if user.is_authenticated %}
+                {% if user.is_authenticated and user == post.author %}
                     <div class="mb-4">
                         <a class="btn btn-primary" href="{% url 'post_edit' pk=post.pk %}">
                             <i class="bi bi-pencil"></i> Edit
@@ -40,15 +41,18 @@
         <!-- Comments Section -->
         <div class="comments-section">
             {% for comment in post.comments.all %}
+
                 <div class="card mb-3">
                     <div class="card-body">
                         <h5 class="card-title">{{ comment.created_at|date:"D M Y" }}</h5>
                         <p class="card-text">{{ comment.text|safe }}</p>
                         <p class="card-text"><small class="text-muted">Published by: {{ comment.author }}</small></p>
+                        {% if user == comment.post.author or user == post.author %}
                         {% if not comment.approved_comment %}
                         <a class="btn btn-primary" href="{% url 'comment_approval' pk=comment.pk %}">Approve Comment</a>
                          {% endif %}
                          <a class="btn btn-danger" href="{% url 'comment_remove' pk=comment.pk %}">Remove Comment</a>
+                         {%endif%}
                          
                         
                         

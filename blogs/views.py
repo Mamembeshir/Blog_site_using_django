@@ -35,14 +35,29 @@ class PostUpdateView(LoginRequiredMixin,UpdateView):
     redirect_field_name='post_detail'
     form_class=PostForm
     model=Post
+
+    def form_valid(self,form):
+        form.instance.author=self.request.user
+        return super().form_valid(form)
+ 
 class PostDeleteView(LoginRequiredMixin,DeleteView):
     login_url='/login/'
     model=Post
     success_url=reverse_lazy('post_list')
+
+    def form_valid(self,form):
+        form.instance.author=self.request.user
+        return super().form_valid(form)
+
+ 
 class DraftListView(LoginRequiredMixin,ListView):
     login_url='/login/'
     redirect_field_name='post_list'
     model=Post
+
+    def form_valid(self,form):
+        form.instance.author=self.request.user
+        return super().form_valid(form)
 
     def get_queryset(self):
         return Post.objects.filter(published_at__isnull=True).order_by('-created_at')
@@ -79,23 +94,26 @@ def add_comment_to_post(request,pk):
 @login_required
 def comment_publish(request, pk):
     comment=get_object_or_404(Comments, pk)
-    comment.publish()
-    return redirect('post_detail', pk=comment.post.pk)
+    if request.user==comment.author:
+        comment.publish()
+        return redirect('post_detail', pk=comment.post.pk)
 
 @login_required
 def comment_appoval(request,pk):
-    comment=get_object_or_404(Comments,pk=pk)
-    comment.approve()
-    comment.save()
-    return redirect('post_detail',pk=comment.post.pk)
+        comment=get_object_or_404(Comments,pk=pk)
+        if comment.post.author==request.user:
+            comment.approve()
+            comment.save()
+            return redirect('post_detail',pk=comment.post.pk)
 
 
 @login_required
 def comment_remove(request,pk):
     comment=get_object_or_404(Comments,pk=pk)
-    pk=comment.post.pk
-    comment.delete()
-    return redirect('post_detail',pk=pk)
+    if comment.post.author==request.user or request.user==comment.author:
+        pk=comment.post.pk
+        comment.delete()
+        return redirect('post_detail',pk=pk)
 
 
 def signup(request):
@@ -125,6 +143,17 @@ def signup(request):
 def profile(request):
     user=request.user
     return render(request, 'registration/profile.html',{"user":user})
+@login_required
+def count_likes(request,pk):
+    post=get_object_or_404(Post,pk=pk)
+    if request.session.get(f'liked_post_{pk}',False):
+        post.likes-=1
+        request.session[f'liked_post_{pk}']=False
+    else:
+        post.likes+=1
+        request.session[f'liked_post_{pk}']=True
+    post.save()
+    return redirect('post_list')
 
 
 

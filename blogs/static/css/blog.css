@@ -24,3 +24,18 @@ body, html{
     background-color: rgb(35, 36, 38);
     color: white;
 }
+/* blog.css */
+
+/* Ensure that the image has a fixed size */
+.fixed-size-img {
+    width: 100%; /* Take up the full width of the card */
+    height: 550px; /* Set a fixed height */
+    object-fit: cover; /* Ensure the image covers the area without stretching */
+    border-radius: 0.25rem; /* Optional: match Bootstrap's border-radius for images */
+}
+
+/* Optional: Additional styles for debugging */
+.card-img-top {
+    border: 2px solid red; /* Add a border to see the image area */
+}
+
