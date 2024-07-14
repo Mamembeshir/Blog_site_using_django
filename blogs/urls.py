@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import (AboutView,PostDetailView,PostListView,CreatePostView,
                     PostUpdateView,PostDeleteView,DraftListView,
-                    add_comment_to_post,comment_appoval,comment_remove,post_publish,signup,profile,MyPostsView,count_likes)
+                    add_comment_to_post,comment_appoval,comment_remove,post_publish,signup,profile,MyPostsView,count_likes,MyDraftListView)
 
 urlpatterns=[
     path('about/',AboutView.as_view(),name='about'),
@@ -18,7 +18,8 @@ urlpatterns=[
     path('post/<int:pk>/likes',count_likes,name='likes'),
     path('signup/',signup,name='signup'),
     path('profile/',profile,name='profile'),
-    path('my-post',MyPostsView.as_view(),name="my_posts")
+    path('my-post',MyPostsView.as_view(),name="my_posts"),
+    path('my-draft/',MyDraftListView.as_view(),name='draft')
     
    
 

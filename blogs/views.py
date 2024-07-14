@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from .forms import PostForm,CommentsForm,UserCreationForm
 from django.contrib.auth import authenticate,login
+from django.contrib.auth import logout
 
 # Create your views here.
 class AboutView(TemplateView):
@@ -55,9 +56,9 @@ class DraftListView(LoginRequiredMixin,ListView):
     redirect_field_name='post_list'
     model=Post
 
-    def form_valid(self,form):
-        form.instance.author=self.request.user
-        return super().form_valid(form)
+    # def form_valid(self,form):
+    #     form.instance.author=self.request.user
+    #     return super().form_valid(form)
 
     def get_queryset(self):
         return Post.objects.filter(published_at__isnull=True).order_by('-created_at')
@@ -66,16 +67,22 @@ class MyPostsView(LoginRequiredMixin,ListView):
     redirect_field_name='post_list'
     model=Post
     def get_queryset(self):
-        return Post.objects.filter(author=self.request.user).order_by('-created_at')    
+        return Post.objects.filter(author=self.request.user).order_by('-created_at')  
+class MyDraftListView(LoginRequiredMixin,ListView):
+    login_url='/login/'
+    redirect_field_name='post_list'
+    model=Post
+    def get_queryset(self):
+        return Post.objects.filter(published_at__isNull=True).filter(author=self.request.user)
+    
+
 @login_required
 def post_publish(request, pk):
     post=get_object_or_404(Post,pk=pk)
-    post.publish()
-    return redirect('post_detail',pk=pk)
+    if request.user == post.author:
+        post.publish()
+        return redirect('post_detail',pk=pk)
     
-
-    
-
 
 @login_required
 def add_comment_to_post(request,pk):
@@ -117,6 +124,10 @@ def comment_remove(request,pk):
 
 
 def signup(request):
+    if request.user.is_authenticated:
+            logout(request)
+            print('not reigsterd')
+            return redirect('signup')
     if request.method == 'POST':
         form = UserCreationForm(request.POST, request.FILES)
         if form.is_valid():
@@ -136,7 +147,6 @@ def signup(request):
             print('Form errors:', form.errors)
     else:
         form = UserCreationForm()
-        print('hey')
     return render(request, 'registration/signup.html', {'form': form})
 
 @login_required
